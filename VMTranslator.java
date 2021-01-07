@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -12,9 +13,9 @@ class VMTranslator {
 
         String filename = args[0].toString();
         List<String> input = Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
-
+        File file = new File(filename);
         List<String> processedInput = writer.processInput(input);
-        List<String> translation = parser.parse(processedInput, filename.substring(0, filename.length() - 2));
+        List<String> translation = parser.parse(processedInput, file.getName());
         writer.write(translation, filename);       
     }
 }

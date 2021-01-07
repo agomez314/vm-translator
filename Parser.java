@@ -61,13 +61,17 @@ public class Parser {
                 result = pushThis(value);
                 break;
             case "that":
-                result = pushThis(value);
+                result = pushThat(value);
                 break;
             case "static":
                 result = pushStatic(value, filename);
                 break;
             case "temp":
                 result = pushTemp(value);
+                break;
+            case "pointer":
+                result = pushPointer(value);
+                break;
             default:
                 break;
         }
@@ -86,13 +90,17 @@ public class Parser {
                 result = popThis(value);
                 break;
             case "that":
-                result = popThis(value);
+                result = popThat(value);
                 break;
             case "static":
                 result = popStatic(value, filename);
                 break;
             case "temp":
-                result = pushTemp(value);
+                result = popTemp(value);
+                break;
+            case "pointer":
+                result = popPointer(value);
+                break;
             default:
                 break;
         }
@@ -102,6 +110,7 @@ public class Parser {
         return 
             "@" + constant + "\n" + 
             "D=A\n" + 
+            
             "@SP\n" + 
             "A=M\n" + 
             "M=D\n" + // *SP=i
@@ -150,14 +159,23 @@ public class Parser {
             "M=M+1\n";
     }
     private String popArgument(String constant) {
-        return 
-            "@SP\n" + 
-            "M=M-1\n" + 
-            "A=M\n" + 
-            "D=M\n" +
+        return
             "@ARG\n" + 
+            "D=M\n" +
+            "@" + constant + "\n" +
+            "D=D+A\n" +
+            "@R13\n" +
+            "M=D\n" +
+
+            "@SP\n" +
+            "A=M-1\n" +
+            "D=M\n" +
+            "@R13\n" +
             "A=M\n" +
-            "M=D\n";
+            "M=D\n" +
+
+            "@SP\n" +
+            "M=M-1\n";
     }
     String pushThis(String constant) {
         return 
@@ -176,13 +194,22 @@ public class Parser {
     }
     String popThis(String constant) {
         return 
-           "@SP\n" + 
-            "M=M-1\n" + 
-            "A=M\n" + 
+           "@THIS\n" + 
             "D=M\n" +
-            "@THIS\n" + 
+            "@" + constant + "\n" +
+            "D=D+A\n" +
+            "@R13\n" +
+            "M=D\n" +
+
+            "@SP\n" +
+            "A=M-1\n" +
+            "D=M\n" +
+            "@R13\n" +
             "A=M\n" +
-            "M=D\n";
+            "M=D\n" +
+
+            "@SP\n" +
+            "M=M-1\n";
     }
     String pushThat(String constant) {
         return 
@@ -201,27 +228,37 @@ public class Parser {
     }
     String popThat(String constant) {
         return
-           "@SP\n" + 
-            "M=M-1\n" + 
-            "A=M\n" + 
+           "@THAT\n" + 
             "D=M\n" +
-            "@THAT\n" + 
+            "@" + constant + "\n" +
+            "D=D+A\n" +
+            "@R13\n" +
+            "M=D\n" +
+
+            "@SP\n" +
+            "A=M-1\n" +
+            "D=M\n" +
+            "@R13\n" +
             "A=M\n" +
-            "M=D\n";
+            "M=D\n" +
+
+            "@SP\n" +
+            "M=M-1\n";
     }
     private String popStatic(String constant, String filename) {
         return 
            "@SP\n" + 
-            "M=M-1\n" + 
-            "A=M\n" + 
+            "A=M-1\n" + 
             "D=M\n" +
-            "@" + filename + "." + "\n" + 
-            "A=M\n" +
-            "M=D\n";
+            "@" + filename + "." + constant + "\n" + 
+            "M=D\n" +
+
+            "@SP\n" +
+            "M=M-1\n";
     }
     private String pushStatic(String constant, String filename) {
         return 
-            "@" + filename + "." + "\n" +
+            "@" + filename + "." + constant + "\n" +
             "D=M\n" +
 
             "@SP\n" +
@@ -248,13 +285,22 @@ public class Parser {
     }
     String popTemp(String constant) {
         return 
-          "@SP\n" + 
-            "M=M-1\n" + 
-            "A=M\n" + 
-            "D=M\n" +
             "@5\n" + 
+            "D=A\n" +
+            "@" + constant + "\n" +
+            "D=D+A\n" +
+            "@R13\n" +
+            "M=D\n" +
+
+            "@SP\n" +
+            "A=M-1\n" +
+            "D=M\n" +
+            "@R13\n" +
             "A=M\n" +
-            "M=D\n";
+            "M=D\n" +
+
+            "@SP\n" +
+            "M=M-1\n";
     }
     String pushPointer(String constant) {
         String command = "";
@@ -281,17 +327,45 @@ public class Parser {
     String add() {
         return 
             "@SP\n" +
-            "AM=M-1\n" +
+            "A=M-1\n" +
             "D=M\n" +
-            "A=A-1\n" +
-            "M=M+D\n";
+            "@R13\n" +
+            "M=D\n" +
+
+            "@SP\n" +
+            "M=M-1\n" +
+            
+            "@SP\n" +
+            "A=M-1\n" +
+            "D=M\n" +
+
+            "@R13\n" +
+            "D=D+M\n" +
+            
+            "@SP\n" +
+            "A=M-1\n" +
+            "M=D\n";
     }
     String sub() {
         return 
-            "@SP\n" + 
-            "AM=M-1\n" + 
-            "D=M\n" + 
-            "A=A-1\n" + 
-            "M=M-D\n";
+            "@SP\n" +
+            "A=M-1\n" +
+            "D=M\n" +
+            "@R13\n" +
+            "M=D\n" +
+
+            "@SP\n" +
+            "M=M-1\n" +
+            
+            "@SP\n" +
+            "A=M-1\n" +
+            "D=M\n" +
+
+            "@R13\n" +
+            "D=D-M\n" +
+            
+            "@SP\n" +
+            "A=M-1\n" +
+            "M=D\n";
     }
 }
