@@ -1,3 +1,4 @@
+// push constant
 @3030
 D=A
 @SP
@@ -6,6 +7,7 @@ M=D
 @SP
 M=M+1
 
+// pop this
 @THIS
 D=M
 @0
@@ -21,6 +23,7 @@ M=D
 @SP
 M=M-1
 
+// push constant
 @3040
 D=A
 @SP
@@ -29,6 +32,7 @@ M=D
 @SP
 M=M+1
 
+// pop that
 @THAT
 D=M
 @1
@@ -44,6 +48,7 @@ M=D
 @SP
 M=M-1
 
+// push constant
 @32
 D=A
 @SP
@@ -52,6 +57,7 @@ M=D
 @SP
 M=M+1
 
+// pop this
 @THIS
 D=M
 @2
@@ -67,6 +73,7 @@ M=D
 @SP
 M=M-1
 
+// push constant
 @46
 D=A
 @SP
@@ -75,7 +82,8 @@ M=D
 @SP
 M=M+1
 
-@THIS
+// pop that
+@THAT
 D=M
 @6
 D=D+A
@@ -90,6 +98,7 @@ M=D
 @SP
 M=M-1
 
+// push this
 @THIS
 D=M
 @0
@@ -101,6 +110,7 @@ M=D
 @SP
 M=M+1
 
+// push that
 @THAT
 D=M
 @1
@@ -112,6 +122,7 @@ M=D
 @SP
 M=M+1
 
+// add
 @SP
 A=M-1
 D=M
@@ -128,6 +139,7 @@ D=D+M
 A=M-1
 M=D
 
+// push this
 @THIS
 D=M
 @2
@@ -139,6 +151,7 @@ M=D
 @SP
 M=M+1
 
+// sub
 @SP
 A=M-1
 D=M
@@ -155,7 +168,8 @@ D=D-M
 A=M-1
 M=D
 
-@THIS
+// push that
+@THAT
 D=M
 @6
 A=D+A
@@ -166,6 +180,7 @@ M=D
 @SP
 M=M+1
 
+// add
 @SP
 A=M-1
 D=M

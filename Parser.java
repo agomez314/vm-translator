@@ -108,6 +108,7 @@ public class Parser {
     }
     private String pushConstant(String constant) {
         return 
+            "// push constant\n" +
             "@" + constant + "\n" + 
             "D=A\n" + 
             
@@ -120,6 +121,7 @@ public class Parser {
     }
     private String pushLocal(String constant) {
         return
+            "// push local\n" +
             "@LCL\n" +
             "D=M\n" +
             "@" + constant + "\n" +
@@ -135,6 +137,7 @@ public class Parser {
     }
     private String popLocal(String constant) {
         return 
+            "// pop local\n" +
             "@SP\n" + 
             "M=M-1\n" + 
             "A=M\n" + 
@@ -145,6 +148,7 @@ public class Parser {
     }
     private String pushArgument(String constant) {
         return 
+            "// push argument\n" +
             "@ARG\n" +
             "D=M\n" +
             "@" + constant + "\n" +
@@ -160,6 +164,7 @@ public class Parser {
     }
     private String popArgument(String constant) {
         return
+            "// pop argument\n" +
             "@ARG\n" + 
             "D=M\n" +
             "@" + constant + "\n" +
@@ -179,6 +184,7 @@ public class Parser {
     }
     String pushThis(String constant) {
         return 
+            "// push this\n" +
             "@THIS\n" +
             "D=M\n" +
             "@" + constant + "\n" +
@@ -194,6 +200,7 @@ public class Parser {
     }
     String popThis(String constant) {
         return 
+            "// pop this\n" +
            "@THIS\n" + 
             "D=M\n" +
             "@" + constant + "\n" +
@@ -213,6 +220,7 @@ public class Parser {
     }
     String pushThat(String constant) {
         return 
+            "// push that\n" +
             "@THAT\n" +
             "D=M\n" +
             "@" + constant + "\n" +
@@ -228,6 +236,7 @@ public class Parser {
     }
     String popThat(String constant) {
         return
+            "// pop that\n" +
            "@THAT\n" + 
             "D=M\n" +
             "@" + constant + "\n" +
@@ -247,6 +256,7 @@ public class Parser {
     }
     private String popStatic(String constant, String filename) {
         return 
+            "// pop static\n" +
            "@SP\n" + 
             "A=M-1\n" + 
             "D=M\n" +
@@ -258,6 +268,7 @@ public class Parser {
     }
     private String pushStatic(String constant, String filename) {
         return 
+            "// push static\n" +
             "@" + filename + "." + constant + "\n" +
             "D=M\n" +
 
@@ -270,6 +281,7 @@ public class Parser {
     }
     private String pushTemp(String constant) {
         return 
+            "// push temp\n" +
             "@5\n" +
             "D=A\n" +
             "@" + constant + "\n" +
@@ -285,6 +297,7 @@ public class Parser {
     }
     String popTemp(String constant) {
         return 
+            "// pop temp\n" +
             "@5\n" + 
             "D=A\n" +
             "@" + constant + "\n" +
@@ -326,6 +339,7 @@ public class Parser {
     }
     String add() {
         return 
+            "// add\n" +
             "@SP\n" +
             "A=M-1\n" +
             "D=M\n" +
@@ -348,6 +362,7 @@ public class Parser {
     }
     String sub() {
         return 
+            "// sub\n" +
             "@SP\n" +
             "A=M-1\n" +
             "D=M\n" +
