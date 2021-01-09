@@ -5,14 +5,14 @@ public class Parser {
     public List<String> parse(List<String> input, String filename) {
         List<String> translation = new ArrayList<>();
         for (String line : input) {
-            String[] command = line.split(" ");
-
-            switch (command[0]) {
+            String[] commandList = line.split(" ");
+            
+            switch (commandList[0]) {
                 case "push":
-                    translation.add(push(command[1], command[2], filename));
+                    translation.add(push(commandList, filename));
                     break;
                 case "pop":
-                    translation.add(pop(command[1], command[2], filename));
+                    translation.add(pop(commandList, filename));
                     break;
                 case "add":
                     translation.add(add());
@@ -45,23 +45,19 @@ public class Parser {
      * @param stackCommand the line segment split into its atomic commands
      * @return a valid hack machine language push command
      */
-    private String push(String command, String value, String filename) {
+    private String push(String[] commandList, String filename) {
         String result = "";
+        String command = commandList[1];
+        String value = commandList[2];
         switch (command) {
             case "constant":
                 result = pushConstant(value);
                 break;
             case "local":
-                result = pushLocal(value);
-                break;
             case "argument":
-                result = pushArgument(value);
-                break;
             case "this":
-                result = pushThis(value);
-                break;
             case "that":
-                result = pushThat(value);
+                result = pushPattern(value, mapCommand(command));
                 break;
             case "static":
                 result = pushStatic(value, filename);
@@ -70,27 +66,23 @@ public class Parser {
                 result = pushTemp(value);
                 break;
             case "pointer":
-                result = pushPointer(value);
+                result = value == String.valueOf(0) ? pushPattern(value, "this") : pushPattern(value, "that");
                 break;
             default:
                 break;
         }
         return result;
     }
-    private String pop(String command, String value, String filename) {
+    private String pop(String[] commandList, String filename) {
         String result = "";
+        String command = commandList[1];
+        String value = commandList[2];
         switch (command) {
             case "local":
-                result = popLocal(value);
-                break;
             case "argument":
-                result = popArgument(value);
-                break;
             case "this":
-                result = popThis(value);
-                break;
             case "that":
-                result = popThat(value);
+                result = popPattern(value, mapCommand(command));
                 break;
             case "static":
                 result = popStatic(value, filename);
@@ -99,7 +91,7 @@ public class Parser {
                 result = popTemp(value);
                 break;
             case "pointer":
-                result = popPointer(value);
+                result = value == String.valueOf(0) ? popPattern(value, "this") : popPattern(value, "that");
                 break;
             default:
                 break;
@@ -119,14 +111,14 @@ public class Parser {
             "@SP\n" + 
             "M=M+1\n"; // SP++
     }
-    private String pushLocal(String constant) {
+    private String pushPattern(String constant, String command) {
         return
-            "// push local\n" +
-            "@LCL\n" +
+            "// push " + command + "\n" +
+            "@" + command + "\n" +
             "D=M\n" +
             "@" + constant + "\n" +
             "A=D+A\n" + 
-            "D=M\n" +  // addr = @LCL + i
+            "D=M\n" +  // addr = @command + i
 
             "@SP\n" +
             "A=M\n" +
@@ -135,109 +127,10 @@ public class Parser {
             "@SP\n" +
             "M=M+1\n";
     }
-    private String popLocal(String constant) {
+    private String popPattern(String constant, String command) {
         return 
-            "// pop local\n" +
-            "@SP\n" + 
-            "M=M-1\n" + 
-            "A=M\n" + 
-            "D=M\n" +
-            "@LCL\n" + 
-            "A=M\n" +
-            "M=D\n";
-    }
-    private String pushArgument(String constant) {
-        return 
-            "// push argument\n" +
-            "@ARG\n" +
-            "D=M\n" +
-            "@" + constant + "\n" +
-            "A=D+A\n" + 
-            "D=M\n" +  // addr = @LCL + i
-
-            "@SP\n" +
-            "A=M\n" +
-            "M=D\n" + // *SP = *addr
-
-            "@SP\n" +
-            "M=M+1\n";
-    }
-    private String popArgument(String constant) {
-        return
-            "// pop argument\n" +
-            "@ARG\n" + 
-            "D=M\n" +
-            "@" + constant + "\n" +
-            "D=D+A\n" +
-            "@R13\n" +
-            "M=D\n" +
-
-            "@SP\n" +
-            "A=M-1\n" +
-            "D=M\n" +
-            "@R13\n" +
-            "A=M\n" +
-            "M=D\n" +
-
-            "@SP\n" +
-            "M=M-1\n";
-    }
-    String pushThis(String constant) {
-        return 
-            "// push this\n" +
-            "@THIS\n" +
-            "D=M\n" +
-            "@" + constant + "\n" +
-            "A=D+A\n" + 
-            "D=M\n" +  // addr = @LCL + i
-
-            "@SP\n" +
-            "A=M\n" +
-            "M=D\n" + // *SP = *addr
-
-            "@SP\n" +
-            "M=M+1\n";
-    }
-    String popThis(String constant) {
-        return 
-            "// pop this\n" +
-           "@THIS\n" + 
-            "D=M\n" +
-            "@" + constant + "\n" +
-            "D=D+A\n" +
-            "@R13\n" +
-            "M=D\n" +
-
-            "@SP\n" +
-            "A=M-1\n" +
-            "D=M\n" +
-            "@R13\n" +
-            "A=M\n" +
-            "M=D\n" +
-
-            "@SP\n" +
-            "M=M-1\n";
-    }
-    String pushThat(String constant) {
-        return 
-            "// push that\n" +
-            "@THAT\n" +
-            "D=M\n" +
-            "@" + constant + "\n" +
-            "A=D+A\n" + 
-            "D=M\n" +  // addr = @LCL + i
-
-            "@SP\n" +
-            "A=M\n" +
-            "M=D\n" + // *SP = *addr
-
-            "@SP\n" +
-            "M=M+1\n";
-    }
-    String popThat(String constant) {
-        return
-            "// pop that\n" +
-           "@THAT\n" + 
+            "// pop " + command + "\n" +
+            "@" + command + "\n" + 
             "D=M\n" +
             "@" + constant + "\n" +
             "D=D+A\n" +
@@ -257,7 +150,7 @@ public class Parser {
     private String popStatic(String constant, String filename) {
         return 
             "// pop static\n" +
-           "@SP\n" + 
+            "@SP\n" + 
             "A=M-1\n" + 
             "D=M\n" +
             "@" + filename + "." + constant + "\n" + 
@@ -315,28 +208,6 @@ public class Parser {
             "@SP\n" +
             "M=M-1\n";
     }
-    String pushPointer(String constant) {
-        String command = "";
-        if (Integer.parseInt(constant) == 0) {
-            // *SP = THIS,SP++
-            command = pushThis(constant);
-        } else {
-            // *SP = THAT,SP++
-            command = pushThat(constant);
-        }
-        return command;
-    }
-    String popPointer(String constant) {
-        String command = "";
-        if (Integer.parseInt(constant) == 0) {
-            // SP--,THIS=*SP
-            command = popThis(constant);
-        } else {
-            // SP--,THAT=*SP
-            command = popThat(constant);
-        }
-        return command;
-    }
     String add() {
         return 
             "// add\n" +
@@ -382,5 +253,19 @@ public class Parser {
             "@SP\n" +
             "A=M-1\n" +
             "M=D\n";
+    }
+    private String mapCommand(String command) {
+        switch(command) {
+            case "local":
+                return "LCL";
+            case "argument":
+                return "ARG";
+            case "this":
+                return "THIS";
+            case "that":
+                return "THAT";
+            default:
+                return "";
+        }
     }
 }

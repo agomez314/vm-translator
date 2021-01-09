@@ -7,14 +7,21 @@ M=D
 @SP
 M=M+1
 
-// pop local
-@SP
-M=M-1
-A=M
-D=M
+// pop LCL
 @LCL
+D=M
+@0
+D=D+A
+@R13
+M=D
+@SP
+A=M-1
+D=M
+@R13
 A=M
 M=D
+@SP
+M=M-1
 
 // push constant
 @21
@@ -34,7 +41,7 @@ M=D
 @SP
 M=M+1
 
-// pop argument
+// pop ARG
 @ARG
 D=M
 @2
@@ -50,7 +57,7 @@ M=D
 @SP
 M=M-1
 
-// pop argument
+// pop ARG
 @ARG
 D=M
 @1
@@ -75,7 +82,7 @@ M=D
 @SP
 M=M+1
 
-// pop this
+// pop THIS
 @THIS
 D=M
 @6
@@ -109,7 +116,7 @@ M=D
 @SP
 M=M+1
 
-// pop that
+// pop THAT
 @THAT
 D=M
 @5
@@ -125,7 +132,7 @@ M=D
 @SP
 M=M-1
 
-// pop that
+// pop THAT
 @THAT
 D=M
 @2
@@ -166,7 +173,7 @@ M=D
 @SP
 M=M-1
 
-// push local
+// push LCL
 @LCL
 D=M
 @0
@@ -178,7 +185,7 @@ M=D
 @SP
 M=M+1
 
-// push that
+// push THAT
 @THAT
 D=M
 @5
@@ -207,7 +214,7 @@ D=D+M
 A=M-1
 M=D
 
-// push argument
+// push ARG
 @ARG
 D=M
 @1
@@ -236,7 +243,7 @@ D=D-M
 A=M-1
 M=D
 
-// push this
+// push THIS
 @THIS
 D=M
 @6
@@ -248,7 +255,7 @@ M=D
 @SP
 M=M+1
 
-// push this
+// push THIS
 @THIS
 D=M
 @6
