@@ -66,7 +66,7 @@ public class Parser {
                 result = pushTemp(value);
                 break;
             case "pointer":
-                result = value == String.valueOf(0) ? pushPattern(value, "this") : pushPattern(value, "that");
+                result = value.equals(String.valueOf(0)) ? pushPattern2("THIS") : pushPattern2("THAT");
                 break;
             default:
                 break;
@@ -91,7 +91,7 @@ public class Parser {
                 result = popTemp(value);
                 break;
             case "pointer":
-                result = value == String.valueOf(0) ? popPattern(value, "this") : popPattern(value, "that");
+                result = value.equals(String.valueOf(0)) ? popPattern2("THIS") : popPattern2("THAT");
                 break;
             default:
                 break;
@@ -113,7 +113,7 @@ public class Parser {
     }
     private String pushPattern(String constant, String command) {
         return
-            "// push " + command + "\n" +
+            "// push " + command + " " + constant + "\n" +
             "@" + command + "\n" +
             "D=M\n" +
             "@" + constant + "\n" +
@@ -127,25 +127,58 @@ public class Parser {
             "@SP\n" +
             "M=M+1\n";
     }
+    private String pushPattern2(String command) {
+        return
+            "// push " + command + "\n" +
+            "@" + command + "\n" +
+            "D=M\n" +
+
+            "@SP\n" +
+            "A=M\n" +
+            "M=D\n" + // *SP = *addr
+
+            "@SP\n" +
+            "M=M+1\n";
+    }
     private String popPattern(String constant, String command) {
         return 
-            "// pop " + command + "\n" +
-            "@" + command + "\n" + 
+            "// pop " + command + " " + constant + "\n" +
+            "@" + command + "\n" +  
             "D=M\n" +
-            "@" + constant + "\n" +
-            "D=D+A\n" +
+            "@" + constant + "\n" + 
+            "D=D+A\n" + 
             "@R13\n" +
             "M=D\n" +
 
             "@SP\n" +
-            "A=M-1\n" +
+            "M=M-1\n" +
+
+            "@SP\n" +
+            "A=M\n" +
             "D=M\n" +
+
             "@R13\n" +
             "A=M\n" +
+            "M=D\n";            
+    }
+     private String popPattern2(String command) {
+        return 
+            "// pop " + command + "\n" +
+            "@" + command + "\n" +  
+            "D=A\n" +
+            "@R13\n" +
             "M=D\n" +
 
             "@SP\n" +
-            "M=M-1\n";
+            "M=M-1\n" +
+
+            "@SP\n" +
+            "A=M\n" +
+            "D=M\n" +
+
+            "@R13\n" +
+            "A=M\n" +
+            "M=D\n";            
     }
     private String popStatic(String constant, String filename) {
         return 

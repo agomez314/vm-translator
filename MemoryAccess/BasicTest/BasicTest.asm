@@ -7,7 +7,7 @@ M=D
 @SP
 M=M+1
 
-// pop LCL
+// pop LCL 0
 @LCL
 D=M
 @0
@@ -15,13 +15,13 @@ D=D+A
 @R13
 M=D
 @SP
-A=M-1
+M=M-1
+@SP
+A=M
 D=M
 @R13
 A=M
 M=D
-@SP
-M=M-1
 
 // push constant
 @21
@@ -41,7 +41,7 @@ M=D
 @SP
 M=M+1
 
-// pop ARG
+// pop ARG 2
 @ARG
 D=M
 @2
@@ -49,15 +49,15 @@ D=D+A
 @R13
 M=D
 @SP
-A=M-1
+M=M-1
+@SP
+A=M
 D=M
 @R13
 A=M
 M=D
-@SP
-M=M-1
 
-// pop ARG
+// pop ARG 1
 @ARG
 D=M
 @1
@@ -65,13 +65,13 @@ D=D+A
 @R13
 M=D
 @SP
-A=M-1
+M=M-1
+@SP
+A=M
 D=M
 @R13
 A=M
 M=D
-@SP
-M=M-1
 
 // push constant
 @36
@@ -82,7 +82,7 @@ M=D
 @SP
 M=M+1
 
-// pop THIS
+// pop THIS 6
 @THIS
 D=M
 @6
@@ -90,13 +90,13 @@ D=D+A
 @R13
 M=D
 @SP
-A=M-1
+M=M-1
+@SP
+A=M
 D=M
 @R13
 A=M
 M=D
-@SP
-M=M-1
 
 // push constant
 @42
@@ -116,7 +116,7 @@ M=D
 @SP
 M=M+1
 
-// pop THAT
+// pop THAT 5
 @THAT
 D=M
 @5
@@ -124,15 +124,15 @@ D=D+A
 @R13
 M=D
 @SP
-A=M-1
+M=M-1
+@SP
+A=M
 D=M
 @R13
 A=M
 M=D
-@SP
-M=M-1
 
-// pop THAT
+// pop THAT 2
 @THAT
 D=M
 @2
@@ -140,13 +140,13 @@ D=D+A
 @R13
 M=D
 @SP
-A=M-1
+M=M-1
+@SP
+A=M
 D=M
 @R13
 A=M
 M=D
-@SP
-M=M-1
 
 // push constant
 @510
@@ -173,7 +173,7 @@ M=D
 @SP
 M=M-1
 
-// push LCL
+// push LCL 0
 @LCL
 D=M
 @0
@@ -185,7 +185,7 @@ M=D
 @SP
 M=M+1
 
-// push THAT
+// push THAT 5
 @THAT
 D=M
 @5
@@ -214,7 +214,7 @@ D=D+M
 A=M-1
 M=D
 
-// push ARG
+// push ARG 1
 @ARG
 D=M
 @1
@@ -243,7 +243,7 @@ D=D-M
 A=M-1
 M=D
 
-// push THIS
+// push THIS 6
 @THIS
 D=M
 @6
@@ -255,7 +255,7 @@ M=D
 @SP
 M=M+1
 
-// push THIS
+// push THIS 6
 @THIS
 D=M
 @6

@@ -1,3 +1,4 @@
+// push constant
 @7
 D=A
 @SP
@@ -6,6 +7,7 @@ M=D
 @SP
 M=M+1
 
+// push constant
 @8
 D=A
 @SP
@@ -14,6 +16,7 @@ M=D
 @SP
 M=M+1
 
+// add
 @SP
 A=M-1
 D=M
