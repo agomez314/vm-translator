@@ -7,9 +7,11 @@ M=D
 @SP
 M=M+1
 
-// pop THIS
+// pop THIS 0
 @THIS
-D=A
+D=M
+@0
+D=D+A
 @R13
 M=D
 @SP
@@ -30,9 +32,11 @@ M=D
 @SP
 M=M+1
 
-// pop THAT
-@THAT
-D=A
+// pop THIS 1
+@THIS
+D=M
+@1
+D=D+A
 @R13
 M=D
 @SP
@@ -94,8 +98,11 @@ D=M
 A=M
 M=D
 
-// push THIS
+// push THIS 0
 @THIS
+D=M
+@0
+A=D+A
 D=M
 @SP
 A=M
@@ -103,8 +110,11 @@ M=D
 @SP
 M=M+1
 
-// push THAT
+// push THAT 1
 @THAT
+D=M
+@1
+A=D+A
 D=M
 @SP
 A=M

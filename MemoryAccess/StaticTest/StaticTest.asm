@@ -1,3 +1,4 @@
+// push constant
 @111
 D=A
 @SP
@@ -6,6 +7,7 @@ M=D
 @SP
 M=M+1
 
+// push constant
 @333
 D=A
 @SP
@@ -14,6 +16,7 @@ M=D
 @SP
 M=M+1
 
+// push constant
 @888
 D=A
 @SP
@@ -22,6 +25,7 @@ M=D
 @SP
 M=M+1
 
+// pop static
 @SP
 A=M-1
 D=M
@@ -30,6 +34,7 @@ M=D
 @SP
 M=M-1
 
+// pop static
 @SP
 A=M-1
 D=M
@@ -38,6 +43,7 @@ M=D
 @SP
 M=M-1
 
+// pop static
 @SP
 A=M-1
 D=M
@@ -46,6 +52,7 @@ M=D
 @SP
 M=M-1
 
+// push static
 @StaticTest.vm.3
 D=M
 @SP
@@ -54,6 +61,7 @@ M=D
 @SP
 M=M+1
 
+// push static
 @StaticTest.vm.1
 D=M
 @SP
@@ -62,6 +70,7 @@ M=D
 @SP
 M=M+1
 
+// sub
 @SP
 A=M-1
 D=M
@@ -78,6 +87,7 @@ D=D-M
 A=M-1
 M=D
 
+// push static
 @StaticTest.vm.8
 D=M
 @SP
@@ -86,6 +96,7 @@ M=D
 @SP
 M=M+1
 
+// add
 @SP
 A=M-1
 D=M

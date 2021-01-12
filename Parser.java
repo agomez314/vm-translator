@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Parser {
+    private static int label_counter = 0;
     public List<String> parse(List<String> input, String filename) {
         List<String> translation = new ArrayList<>();
         for (String line : input) {
@@ -20,9 +21,9 @@ public class Parser {
                 case "sub":
                     translation.add(sub());
                     break;
-                // case "neg":
-                //     translation.add(add());
-                //     break;
+                case "eq":
+                    translation.add(equals());
+                    break;
                 // case "lg":
                 //     translation.add(add());
                 //     break;
@@ -66,7 +67,7 @@ public class Parser {
                 result = pushTemp(value);
                 break;
             case "pointer":
-                result = value.equals(String.valueOf(0)) ? pushPattern2("THIS") : pushPattern2("THAT");
+                result = value.equals(String.valueOf(0)) ? pushPattern("0", "THIS") : pushPattern("1", "THAT");
                 break;
             default:
                 break;
@@ -91,7 +92,7 @@ public class Parser {
                 result = popTemp(value);
                 break;
             case "pointer":
-                result = value.equals(String.valueOf(0)) ? popPattern2("THIS") : popPattern2("THAT");
+                result = value.equals(String.valueOf(0)) ? popPattern("0", "THIS") : popPattern("1", "THIS");
                 break;
             default:
                 break;
@@ -286,6 +287,38 @@ public class Parser {
             "@SP\n" +
             "A=M-1\n" +
             "M=D\n";
+    }
+    private String equals() {
+        return 
+            "// equals\n" +
+            "@SP\n" +
+            "A=M-1\n" +
+            "D=M\n" +
+            "@R13\n" +
+            "M=D\n" +
+
+            "@SP\n" +
+            "M=M-1\n" +
+            
+            "@SP\n" +
+            "A=M-1\n" +
+            "D=M\n" +
+
+            "@R13\n" +
+            "D=D-M\n" + //op
+            "@EQUALS\n" +
+            "D;JEQ\n" +
+
+            "(EQUALS)\n" +
+            "@SP\n" +
+            "A=M-1\n" +
+            "M=-1\n" +
+            "0;JMP\n" +
+
+            "@SP\n" +
+            "A=M-1\n" +
+            "M=0\n";
+
     }
     private String mapCommand(String command) {
         switch(command) {
