@@ -23,16 +23,28 @@ public class Parser {
                     break;
                 case "eq":
                     translation.add(equals());
+                    label_counter++;
                     break;
-                // case "lg":
-                //     translation.add(add());
-                //     break;
-                // case "gt":
-                //     translation.add(add());
-                //     break;
-                // case "eq":
-                //     translation.add(add());
-                //     break;
+                case "lt":
+                    translation.add(lessThan());
+                    label_counter++;
+                    break;
+                case "gt":
+                    translation.add(moreThan());
+                    label_counter++;
+                    break;
+                case "neg":
+                    translation.add(negate());
+                    break;
+                case "and":
+                    translation.add(and());
+                    break;
+                case "or":
+                    translation.add(or());
+                    break;
+                case "not":
+                    translation.add(not());
+                    break;
                 default:
                     break;
             }
@@ -128,19 +140,6 @@ public class Parser {
             "@SP\n" +
             "M=M+1\n";
     }
-    private String pushPattern2(String command) {
-        return
-            "// push " + command + "\n" +
-            "@" + command + "\n" +
-            "D=M\n" +
-
-            "@SP\n" +
-            "A=M\n" +
-            "M=D\n" + // *SP = *addr
-
-            "@SP\n" +
-            "M=M+1\n";
-    }
     private String popPattern(String constant, String command) {
         return 
             "// pop " + command + " " + constant + "\n" +
@@ -148,25 +147,6 @@ public class Parser {
             "D=M\n" +
             "@" + constant + "\n" + 
             "D=D+A\n" + 
-            "@R13\n" +
-            "M=D\n" +
-
-            "@SP\n" +
-            "M=M-1\n" +
-
-            "@SP\n" +
-            "A=M\n" +
-            "D=M\n" +
-
-            "@R13\n" +
-            "A=M\n" +
-            "M=D\n";            
-    }
-     private String popPattern2(String command) {
-        return 
-            "// pop " + command + "\n" +
-            "@" + command + "\n" +  
-            "D=A\n" +
             "@R13\n" +
             "M=D\n" +
 
@@ -246,79 +226,111 @@ public class Parser {
         return 
             "// add\n" +
             "@SP\n" +
-            "A=M-1\n" +
-            "D=M\n" +
-            "@R13\n" +
-            "M=D\n" +
-
-            "@SP\n" +
             "M=M-1\n" +
-            
-            "@SP\n" +
-            "A=M-1\n" +
+            "A=M\n" +
             "D=M\n" +
-
-            "@R13\n" +
-            "D=D+M\n" +
-            
             "@SP\n" +
-            "A=M-1\n" +
-            "M=D\n";
+            "AM=M-1\n" +
+            "M=D+M\n" +
+            "@SP\n" +
+            "M=M+1\n";
     }
     String sub() {
         return 
-            "// sub\n" +
+             "// subtract\n" +
             "@SP\n" +
-            "A=M-1\n" +
+            "AM=M-1\n" +
             "D=M\n" +
-            "@R13\n" +
-            "M=D\n" +
-
             "@SP\n" +
-            "M=M-1\n" +
-            
+            "AM=M-1\n" +
+            "M=M-D\n" +
             "@SP\n" +
-            "A=M-1\n" +
-            "D=M\n" +
-
-            "@R13\n" +
-            "D=D-M\n" +
-            
-            "@SP\n" +
-            "A=M-1\n" +
-            "M=D\n";
+            "M=M+1\n";
     }
     private String equals() {
         return 
             "// equals\n" +
             "@SP\n" +
-            "A=M-1\n" +
+            "AM=M-1\n" +
             "D=M\n" +
-            "@R13\n" +
-            "M=D\n" +
-
-            "@SP\n" +
-            "M=M-1\n" +
-            
             "@SP\n" +
             "A=M-1\n" +
+            "D=M-D\n" +
+            "M=-1\n\n" +
+            "@CONTINUE" + label_counter + "\n" +
+            "D;JEQ\n\n" +
+            "@SP\n" +
+            "A=M-1\n" +
+            "M=0\n" +
+            "(CONTINUE" + label_counter + ")\n";
+    }
+    private String lessThan() {
+        return
+            "// less than\n" +
+            "@SP\n" +
+            "AM=M-1\n" +
             "D=M\n" +
-
-            "@R13\n" +
-            "D=D-M\n" + //op
-            "@EQUALS\n" +
-            "D;JEQ\n" +
-
-            "(EQUALS)\n" +
             "@SP\n" +
             "A=M-1\n" +
-            "M=-1\n" +
-            "0;JMP\n" +
-
+            "D=M-D\n" +
+            "M=-1\n\n" +
+            "@CONTINUE" + label_counter + "\n" +
+            "D;JLT\n\n" +
             "@SP\n" +
             "A=M-1\n" +
-            "M=0\n";
-
+            "M=0\n" +
+            "(CONTINUE" + label_counter + ")\n";
+    }
+      private String moreThan() {
+        return
+            "// more than\n" +
+            "@SP\n" +
+            "AM=M-1\n" +
+            "D=M\n" +
+            "@SP\n" +
+            "A=M-1\n" +
+            "D=M-D\n" +
+            "M=-1\n\n" +
+            "@CONTINUE" + label_counter + "\n" +
+            "D;JGT\n\n" +
+            "@SP\n" +
+            "A=M-1\n" +
+            "M=0\n" +
+            "(CONTINUE" + label_counter + ")\n";
+    }
+    private String negate() {
+        return 
+            "// negate\n" +
+            "@SP\n" +
+            "A=M-1\n" +
+            "M=-M\n";
+    }
+    private String not() {
+        return 
+            "// not\n" +
+            "@SP\n" +
+            "A=M-1\n" +
+            "M=!M\n";
+    }
+    private String and() {
+        return 
+            "// not\n" +
+            "@SP\n" +
+            "AM=M-1\n" +
+            "D=M\n" +
+            "@SP\n" +
+            "A=M-1\n" +
+            "M=D&M\n";
+    }
+    private String or() {
+        return 
+            "// not\n" +
+            "@SP\n" +
+            "AM=M-1\n" +
+            "D=M\n" +
+            "@SP\n" +
+            "A=M-1\n" +
+            "M=D|M\n";
     }
     private String mapCommand(String command) {
         switch(command) {
