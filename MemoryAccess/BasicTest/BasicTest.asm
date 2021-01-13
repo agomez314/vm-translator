@@ -7,17 +7,15 @@ M=D
 @SP
 M=M+1
 
-// pop LCL 0
-@LCL
-D=M
+// pop local 0
 @0
-D=D+A
+D=A
+@LCL
+D=M+D
 @R13
 M=D
 @SP
-M=M-1
-@SP
-A=M
+AM=M-1
 D=M
 @R13
 A=M
@@ -41,33 +39,29 @@ M=D
 @SP
 M=M+1
 
-// pop ARG 2
-@ARG
-D=M
+// pop argument 2
 @2
-D=D+A
+D=A
+@ARG
+D=M+D
 @R13
 M=D
 @SP
-M=M-1
-@SP
-A=M
+AM=M-1
 D=M
 @R13
 A=M
 M=D
 
-// pop ARG 1
-@ARG
-D=M
+// pop argument 1
 @1
-D=D+A
+D=A
+@ARG
+D=M+D
 @R13
 M=D
 @SP
-M=M-1
-@SP
-A=M
+AM=M-1
 D=M
 @R13
 A=M
@@ -82,17 +76,15 @@ M=D
 @SP
 M=M+1
 
-// pop THIS 6
-@THIS
-D=M
+// pop this 6
 @6
-D=D+A
+D=A
+@THIS
+D=M+D
 @R13
 M=D
 @SP
-M=M-1
-@SP
-A=M
+AM=M-1
 D=M
 @R13
 A=M
@@ -116,33 +108,29 @@ M=D
 @SP
 M=M+1
 
-// pop THAT 5
-@THAT
-D=M
+// pop that 5
 @5
-D=D+A
+D=A
+@THAT
+D=M+D
 @R13
 M=D
 @SP
-M=M-1
-@SP
-A=M
+AM=M-1
 D=M
 @R13
 A=M
 M=D
 
-// pop THAT 2
-@THAT
-D=M
+// pop that 2
 @2
-D=D+A
+D=A
+@THAT
+D=M+D
 @R13
 M=D
 @SP
-M=M-1
-@SP
-A=M
+AM=M-1
 D=M
 @R13
 A=M
@@ -157,27 +145,25 @@ M=D
 @SP
 M=M+1
 
-// pop temp
-@5
-D=A
+// pop temp 6
 @6
-D=D+A
+D=A
+@5
+D=A+D
 @R13
 M=D
 @SP
-A=M-1
+AM=M-1
 D=M
 @R13
 A=M
 M=D
-@SP
-M=M-1
 
-// push LCL 0
-@LCL
-D=M
+// push local 0
 @0
-A=D+A
+D=A
+@LCL
+A=M+D
 D=M
 @SP
 A=M
@@ -185,127 +171,11 @@ M=D
 @SP
 M=M+1
 
-// push THAT 5
-@THAT
-D=M
-@5
-A=D+A
-D=M
-@SP
-A=M
-M=D
-@SP
-M=M+1
-
-// add
-@SP
-A=M-1
-D=M
-@R13
-M=D
-@SP
-M=M-1
-@SP
-A=M-1
-D=M
-@R13
-D=D+M
-@SP
-A=M-1
-M=D
-
-// push ARG 1
-@ARG
-D=M
-@1
-A=D+A
-D=M
-@SP
-A=M
-M=D
-@SP
-M=M+1
-
-// sub
-@SP
-A=M-1
-D=M
-@R13
-M=D
-@SP
-M=M-1
-@SP
-A=M-1
-D=M
-@R13
-D=D-M
-@SP
-A=M-1
-M=D
-
-// push THIS 6
-@THIS
-D=M
-@6
-A=D+A
-D=M
-@SP
-A=M
-M=D
-@SP
-M=M+1
-
-// push THIS 6
-@THIS
-D=M
-@6
-A=D+A
-D=M
-@SP
-A=M
-M=D
-@SP
-M=M+1
-
-// add
-@SP
-A=M-1
-D=M
-@R13
-M=D
-@SP
-M=M-1
-@SP
-A=M-1
-D=M
-@R13
-D=D+M
-@SP
-A=M-1
-M=D
-
-// sub
-@SP
-A=M-1
-D=M
-@R13
-M=D
-@SP
-M=M-1
-@SP
-A=M-1
-D=M
-@R13
-D=D-M
-@SP
-A=M-1
-M=D
-
-// push temp
+// push that 5
 @5
 D=A
-@6
-A=D+A
+@THAT
+A=M+D
 D=M
 @SP
 A=M
@@ -315,17 +185,101 @@ M=M+1
 
 // add
 @SP
-A=M-1
+M=M-1
+A=M
 D=M
-@R13
+@SP
+AM=M-1
+M=D+M
+@SP
+M=M+1
+
+// push argument 1
+@1
+D=A
+@ARG
+A=M+D
+D=M
+@SP
+A=M
 M=D
+@SP
+M=M+1
+
+// subtract
+@SP
+AM=M-1
+D=M
+@SP
+AM=M-1
+M=M-D
+@SP
+M=M+1
+
+// push this 6
+@6
+D=A
+@THIS
+A=M+D
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+
+// push this 6
+@6
+D=A
+@THIS
+A=M+D
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+
+// add
 @SP
 M=M-1
-@SP
-A=M-1
+A=M
 D=M
-@R13
-D=D+M
 @SP
-A=M-1
+AM=M-1
+M=D+M
+@SP
+M=M+1
+
+// subtract
+@SP
+AM=M-1
+D=M
+@SP
+AM=M-1
+M=M-D
+@SP
+M=M+1
+
+// push temp 6
+@6
+D=A
+@5
+A=A+D
+D=M
+@SP
+A=M
 M=D
+@SP
+M=M+1
+
+// add
+@SP
+M=M-1
+A=M
+D=M
+@SP
+AM=M-1
+M=D+M
+@SP
+M=M+1

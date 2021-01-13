@@ -7,17 +7,15 @@ M=D
 @SP
 M=M+1
 
-// pop THIS 0
-@THIS
-D=M
+// pop pointer 0
 @0
-D=D+A
+D=A
+@THIS
+D=A+D
 @R13
 M=D
 @SP
-M=M-1
-@SP
-A=M
+AM=M-1
 D=M
 @R13
 A=M
@@ -32,17 +30,15 @@ M=D
 @SP
 M=M+1
 
-// pop THIS 1
-@THIS
-D=M
+// pop pointer 1
 @1
-D=D+A
+D=A
+@THIS
+D=A+D
 @R13
 M=D
 @SP
-M=M-1
-@SP
-A=M
+AM=M-1
 D=M
 @R13
 A=M
@@ -57,17 +53,15 @@ M=D
 @SP
 M=M+1
 
-// pop THIS 2
-@THIS
-D=M
+// pop this 2
 @2
-D=D+A
+D=A
+@THIS
+D=M+D
 @R13
 M=D
 @SP
-M=M-1
-@SP
-A=M
+AM=M-1
 D=M
 @R13
 A=M
@@ -82,27 +76,25 @@ M=D
 @SP
 M=M+1
 
-// pop THAT 6
-@THAT
-D=M
+// pop that 6
 @6
-D=D+A
+D=A
+@THAT
+D=M+D
 @R13
 M=D
 @SP
-M=M-1
-@SP
-A=M
+AM=M-1
 D=M
 @R13
 A=M
 M=D
 
-// push THIS 0
-@THIS
-D=M
+// push pointer 0
 @0
-A=D+A
+D=A
+@3
+A=A+D
 D=M
 @SP
 A=M
@@ -110,11 +102,11 @@ M=D
 @SP
 M=M+1
 
-// push THAT 1
-@THAT
-D=M
+// push pointer 1
 @1
-A=D+A
+D=A
+@3
+A=A+D
 D=M
 @SP
 A=M
@@ -124,26 +116,20 @@ M=M+1
 
 // add
 @SP
-A=M-1
-D=M
-@R13
-M=D
-@SP
 M=M-1
-@SP
-A=M-1
+A=M
 D=M
-@R13
-D=D+M
 @SP
-A=M-1
-M=D
+AM=M-1
+M=D+M
+@SP
+M=M+1
 
-// push THIS 2
-@THIS
-D=M
+// push this 2
 @2
-A=D+A
+D=A
+@THIS
+A=M+D
 D=M
 @SP
 A=M
@@ -151,28 +137,21 @@ M=D
 @SP
 M=M+1
 
-// sub
+// subtract
 @SP
-A=M-1
+AM=M-1
 D=M
-@R13
-M=D
 @SP
-M=M-1
+AM=M-1
+M=M-D
 @SP
-A=M-1
-D=M
-@R13
-D=D-M
-@SP
-A=M-1
-M=D
+M=M+1
 
-// push THAT 6
-@THAT
-D=M
+// push that 6
 @6
-A=D+A
+D=A
+@THAT
+A=M+D
 D=M
 @SP
 A=M
@@ -182,17 +161,11 @@ M=M+1
 
 // add
 @SP
-A=M-1
-D=M
-@R13
-M=D
-@SP
 M=M-1
-@SP
-A=M-1
+A=M
 D=M
-@R13
-D=D+M
 @SP
-A=M-1
-M=D
+AM=M-1
+M=D+M
+@SP
+M=M+1

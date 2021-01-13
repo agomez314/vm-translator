@@ -62,27 +62,122 @@ public class Parser {
         String result = "";
         String command = commandList[1];
         String value = commandList[2];
-        switch (command) {
-            case "constant":
-                result = pushConstant(value);
-                break;
-            case "local":
-            case "argument":
-            case "this":
-            case "that":
-                result = pushPattern(value, mapCommand(command));
-                break;
-            case "static":
-                result = pushStatic(value, filename);
-                break;
-            case "temp":
-                result = pushTemp(value);
-                break;
-            case "pointer":
-                result = value.equals(String.valueOf(0)) ? pushPattern("0", "THIS") : pushPattern("1", "THAT");
-                break;
-            default:
-                break;
+        if (command.equals("constant")) {
+            result =
+                "// push constant\n" +
+                "@" + value + "\n" + 
+                "D=A\n" + 
+                
+                "@SP\n" + 
+                "A=M\n" + 
+                "M=D\n" + // *SP=i
+
+                "@SP\n" + 
+                "M=M+1\n"; // SP++
+        } else if (command.equals("local")) {
+            result = 
+                "// push local " + value + "\n" +
+                "@" + value + "\n" +
+                "D=A\n" +
+                "@LCL\n" +
+                "A=M+D\n" +  // addr = @command + i
+                "D=M\n" +
+                
+                "@SP\n" +
+                "A=M\n" +
+                "M=D\n" + // *SP = *addr
+
+                "@SP\n" +
+                "M=M+1\n";
+        } else if (command.equals("argument")) {
+            result = 
+                "// push argument " + value + "\n" +
+                "@" + value + "\n" +
+                "D=A\n" +
+                "@ARG\n" +
+                "A=M+D\n" +  // addr = @command + i
+                "D=M\n" +
+                
+                "@SP\n" +
+                "A=M\n" +
+                "M=D\n" + // *SP = *addr
+
+                "@SP\n" +
+                "M=M+1\n";
+        } else if (command.equals("this")) {
+            result = 
+                "// push this " + value + "\n" +
+                "@" + value + "\n" +
+                "D=A\n" +
+                "@THIS\n" +
+                "A=M+D\n" +  // addr = @command + i
+                "D=M\n" +
+                
+                "@SP\n" +
+                "A=M\n" +
+                "M=D\n" + // *SP = *addr
+
+                "@SP\n" +
+                "M=M+1\n";
+        } else if (command.equals("that")) {
+            result =
+                "// push that " + value + "\n" +
+                "@" + value + "\n" +
+                "D=A\n" +
+                "@THAT\n" +
+                "A=M+D\n" +  // addr = @command + i
+                "D=M\n" +
+
+                "@SP\n" +
+                "A=M\n" +
+                "M=D\n" + // *SP = *addr
+
+                "@SP\n" +
+                "M=M+1\n";
+        } else if (command.equals("static")) {
+            result =
+                "// push static\n" +
+                "@" + filename + "." + value + "\n" +
+                "D=M\n" +
+
+                "@SP\n" +
+                "A=M\n" +
+                "M=D\n" + // *SP = *addr
+
+                "@SP\n" +
+                "M=M+1\n";
+        } else if (command.equals("temp")) {
+            result =
+                "// push temp " + value + "\n" +
+                "@" + value + "\n" +
+                "D=A\n" +
+                "@5\n" +
+                "A=A+D\n" +  // addr = @command + i
+                "D=M\n" +
+                
+                "@SP\n" +
+                "A=M\n" +
+                "M=D\n" + // *SP = *addr
+
+                "@SP\n" +
+                "M=M+1\n";
+        } else if (command.equals("pointer")) {
+            result = 
+                "// push pointer " + value + "\n" +
+                "@" + value + "\n" +
+                "D=A\n" +
+                "@3\n" +
+                "A=A+D\n" +  // addr = @command + i
+                "D=M\n" +
+
+                "@SP\n" +
+                "A=M\n" +
+                "M=D\n" + // *SP = *addr
+
+                "@SP\n" +
+                "M=M+1\n";
+        } else {
+            result = "***do not recognize command***";
         }
         return result;
     }
@@ -90,138 +185,131 @@ public class Parser {
         String result = "";
         String command = commandList[1];
         String value = commandList[2];
-        switch (command) {
-            case "local":
-            case "argument":
-            case "this":
-            case "that":
-                result = popPattern(value, mapCommand(command));
-                break;
-            case "static":
-                result = popStatic(value, filename);
-                break;
-            case "temp":
-                result = popTemp(value);
-                break;
-            case "pointer":
-                result = value.equals(String.valueOf(0)) ? popPattern("0", "THIS") : popPattern("1", "THIS");
-                break;
-            default:
-                break;
+        if (command.equals("local")) {
+            result = 
+                "// pop local " + value + "\n" +
+                "@" + value + "\n" +  
+                "D=A\n" +
+                "@LCL\n" + 
+                "D=M+D\n" + 
+
+                "@R13\n" +
+                "M=D\n" +
+
+                "@SP\n" +
+                "AM=M-1\n" +
+                "D=M\n" +
+
+                "@R13\n" +
+                "A=M\n" +
+                "M=D\n";    
+        } else if (command.equals("argument")) {
+            result = 
+                "// pop argument " + value + "\n" +
+                "@" + value + "\n" +  
+                "D=A\n" +
+                "@ARG\n" + 
+                "D=M+D\n" + 
+
+                "@R13\n" +
+                "M=D\n" +
+
+                "@SP\n" +
+                "AM=M-1\n" +
+                "D=M\n" +
+
+                "@R13\n" +
+                "A=M\n" +
+                "M=D\n";    
+        } else if (command.equals("this")) {
+            result = 
+                "// pop this " + value + "\n" +
+                "@" + value + "\n" +  
+                "D=A\n" +
+                "@THIS\n" + 
+                "D=M+D\n" + 
+
+                "@R13\n" +
+                "M=D\n" +
+
+                "@SP\n" +
+                "AM=M-1\n" +
+                "D=M\n" +
+
+                "@R13\n" +
+                "A=M\n" +
+                "M=D\n";   
+        } else if (command.equals("that")) {
+            result =
+                "// pop that " + value + "\n" +
+                "@" + value + "\n" +  
+                "D=A\n" +
+                "@THAT\n" + 
+                "D=M+D\n" + 
+
+                "@R13\n" +
+                "M=D\n" +
+
+                "@SP\n" +
+                "AM=M-1\n" +
+                "D=M\n" +
+
+                "@R13\n" +
+                "A=M\n" +
+                "M=D\n"; 
+        } else if (command.equals("static")) {
+            result =
+                "// pop static\n" +
+                "@SP\n" + 
+                "A=M-1\n" + 
+                "D=M\n" +
+                "@" + filename + "." + value + "\n" + 
+                "M=D\n" +
+
+                "@SP\n" +
+                "M=M-1\n";
+        } else if (command.equals("temp")) {
+            result =
+                "// pop temp " + value + "\n" +
+                "@" + value + "\n" +  
+                "D=A\n" +
+                "@5\n" + 
+                "D=A+D\n" + 
+
+                "@R13\n" +
+                "M=D\n" +
+
+                "@SP\n" +
+                "AM=M-1\n" +
+                "D=M\n" +
+
+                "@R13\n" +
+                "A=M\n" +
+                "M=D\n";    
+        } else if (command.equals("pointer")) {
+            result = 
+                "// pop pointer " + value + "\n" +
+                "@" + value + "\n" +  
+                "D=A\n" +
+                "@THIS\n" + 
+                "D=A+D\n" + 
+
+                "@R13\n" +
+                "M=D\n" +
+
+                "@SP\n" +
+                "AM=M-1\n" +
+                "D=M\n" +
+
+                "@R13\n" +
+                "A=M\n" +
+                "M=D\n";   
+        } else {
+            result = "***do not recognize command***";
         }
-        return result;
+       return result;
     }
-    private String pushConstant(String constant) {
-        return 
-            "// push constant\n" +
-            "@" + constant + "\n" + 
-            "D=A\n" + 
-            
-            "@SP\n" + 
-            "A=M\n" + 
-            "M=D\n" + // *SP=i
 
-            "@SP\n" + 
-            "M=M+1\n"; // SP++
-    }
-    private String pushPattern(String constant, String command) {
-        return
-            "// push " + command + " " + constant + "\n" +
-            "@" + command + "\n" +
-            "D=M\n" +
-            "@" + constant + "\n" +
-            "A=D+A\n" + 
-            "D=M\n" +  // addr = @command + i
-
-            "@SP\n" +
-            "A=M\n" +
-            "M=D\n" + // *SP = *addr
-
-            "@SP\n" +
-            "M=M+1\n";
-    }
-    private String popPattern(String constant, String command) {
-        return 
-            "// pop " + command + " " + constant + "\n" +
-            "@" + command + "\n" +  
-            "D=M\n" +
-            "@" + constant + "\n" + 
-            "D=D+A\n" + 
-            "@R13\n" +
-            "M=D\n" +
-
-            "@SP\n" +
-            "M=M-1\n" +
-
-            "@SP\n" +
-            "A=M\n" +
-            "D=M\n" +
-
-            "@R13\n" +
-            "A=M\n" +
-            "M=D\n";            
-    }
-    private String popStatic(String constant, String filename) {
-        return 
-            "// pop static\n" +
-            "@SP\n" + 
-            "A=M-1\n" + 
-            "D=M\n" +
-            "@" + filename + "." + constant + "\n" + 
-            "M=D\n" +
-
-            "@SP\n" +
-            "M=M-1\n";
-    }
-    private String pushStatic(String constant, String filename) {
-        return 
-            "// push static\n" +
-            "@" + filename + "." + constant + "\n" +
-            "D=M\n" +
-
-            "@SP\n" +
-            "A=M\n" +
-            "M=D\n" + // *SP = *addr
-
-            "@SP\n" +
-            "M=M+1\n";
-    }
-    private String pushTemp(String constant) {
-        return 
-            "// push temp\n" +
-            "@5\n" +
-            "D=A\n" +
-            "@" + constant + "\n" +
-            "A=D+A\n" + 
-            "D=M\n" +  // addr = @LCL + i
-
-            "@SP\n" +
-            "A=M\n" +
-            "M=D\n" + // *SP = *addr
-
-            "@SP\n" +
-            "M=M+1\n";
-    }
-    String popTemp(String constant) {
-        return 
-            "// pop temp\n" +
-            "@5\n" + 
-            "D=A\n" +
-            "@" + constant + "\n" +
-            "D=D+A\n" +
-            "@R13\n" +
-            "M=D\n" +
-
-            "@SP\n" +
-            "A=M-1\n" +
-            "D=M\n" +
-            "@R13\n" +
-            "A=M\n" +
-            "M=D\n" +
-
-            "@SP\n" +
-            "M=M-1\n";
-    }
     String add() {
         return 
             "// add\n" +

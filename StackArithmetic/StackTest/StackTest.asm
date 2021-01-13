@@ -342,7 +342,8 @@ M=M+1
 
 // add
 @SP
-AM=M-1
+M=M-1
+A=M
 D=M
 @SP
 AM=M-1
