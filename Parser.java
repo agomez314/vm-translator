@@ -3,11 +3,19 @@ import java.util.List;
 
 public class Parser {
     private static int label_counter = 0;
+
+    public List<String> parse(List<List<String>> input, List<String> filenames) {
+        List<String> result = new ArrayList<>();
+        for (int i = 0; i < input.size(); i++) {
+            result.addAll(parse(input.get(i), filenames.get(i)));
+        }
+        return result;
+    }
+    
     public List<String> parse(List<String> input, String filename) {
         List<String> translation = new ArrayList<>();
         for (String line : input) {
             String[] commandList = line.split(" ");
-            
             switch (commandList[0]) {
                 case "push":
                     translation.add(push(commandList, filename));
@@ -419,19 +427,5 @@ public class Parser {
             "@SP\n" +
             "A=M-1\n" +
             "M=D|M\n";
-    }
-    private String mapCommand(String command) {
-        switch(command) {
-            case "local":
-                return "LCL";
-            case "argument":
-                return "ARG";
-            case "this":
-                return "THIS";
-            case "that":
-                return "THAT";
-            default:
-                return "";
-        }
     }
 }
