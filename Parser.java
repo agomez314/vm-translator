@@ -53,6 +53,15 @@ public class Parser {
                 case "not":
                     translation.add(not());
                     break;
+                case "goto":
+                    translation.add(_goto(commandList[1]));
+                    break;
+                case "label":
+                    translation.add(gotoLabel(commandList[1]));
+                    break;
+                case "if-goto":
+                    translation.add(ifgoto(commandList[1]));
+                    break;
                 default:
                     break;
             }
@@ -427,5 +436,21 @@ public class Parser {
             "@SP\n" +
             "A=M-1\n" +
             "M=D|M\n";
+    }
+    private String gotoLabel(String label) {
+        return "(" + label + ")\n";
+    }
+    private String _goto(String label) {
+        return 
+            "@" + label + "\n0;JMP\n";
+    }
+    
+    private String ifgoto(String label) {
+        return 
+            "@SP\n" +
+            "AM=M-1\n" + 
+            "D=M\n" +
+            "@" + label + "\n" +
+            "D;JMP\n";
     }
 }
